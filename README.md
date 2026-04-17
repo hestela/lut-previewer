@@ -1,6 +1,8 @@
 # LUT Previewer
 
-A PyQt5 desktop app for previewing colour LUT files (.cube) applied to photos. Load an image, add one or more LUTs, and compare results side by side using a draggable split view. Works in Linux and Windows.
+A PyQt5 desktop app for previewing the effect of different LUT files (.cube) to your photos (RAW and non-RAW files supported).  
+Load an image, add one or more LUTs, and compare results side by side using a draggable split view.  
+Works in Linux and Windows.
 
 ![Split view with before/after comparison](screenshot.png)
 
