@@ -7,7 +7,7 @@ One RecentFiles instance per file type (images, LUTs).
 import os
 from PyQt5.QtCore import QSettings
 
-MAX_RECENT = 10
+MAX_RECENT = 100
 
 
 class RecentFiles:

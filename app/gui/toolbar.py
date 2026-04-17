@@ -1,13 +1,13 @@
 """
-Toolbar widget with file-open buttons, status labels, and view mode selector.
+Toolbar widget: image open button, export, view mode selector, status label.
 
-Both "Open Image" and "Open LUT" are QToolButtons with a dropdown arrow that
-shows a persistent recent-files history (backed by QSettings via RecentFiles).
+LUT management has moved to the LUTPanel sidebar (app/gui/lut_panel.py).
 """
 
 import os
 from PyQt5.QtWidgets import (
-    QWidget, QHBoxLayout, QLabel, QComboBox, QFrame, QToolButton, QMenu, QPushButton
+    QWidget, QHBoxLayout, QLabel, QComboBox, QFrame,
+    QToolButton, QMenu, QPushButton
 )
 from PyQt5.QtCore import pyqtSignal, Qt
 from PyQt5.QtGui import QFont
@@ -24,16 +24,13 @@ def _separator() -> QFrame:
 
 class Toolbar(QWidget):
     open_image_requested = pyqtSignal()
-    open_lut_requested = pyqtSignal()
     export_requested = pyqtSignal()
     view_mode_changed = pyqtSignal(str)      # "split" | "before" | "after"
     recent_image_selected = pyqtSignal(str)  # path chosen from image history
-    recent_lut_selected = pyqtSignal(str)    # path chosen from LUT history
 
     def __init__(self, parent=None):
         super().__init__(parent)
         self._image_history = RecentFiles("images")
-        self._lut_history = RecentFiles("luts")
         self._build_ui()
 
     def _build_ui(self):
@@ -52,20 +49,6 @@ class Toolbar(QWidget):
         self._lbl_image.setMinimumWidth(160)
         self._lbl_image.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
         layout.addWidget(self._lbl_image)
-
-        layout.addWidget(_separator())
-
-        self._btn_lut = QToolButton()
-        self._btn_lut.setText("Open LUT")
-        self._btn_lut.setPopupMode(QToolButton.MenuButtonPopup)
-        self._btn_lut.clicked.connect(self.open_lut_requested)
-        self._refresh_lut_menu()
-        layout.addWidget(self._btn_lut)
-
-        self._lbl_lut = QLabel("No LUT loaded")
-        self._lbl_lut.setMinimumWidth(160)
-        self._lbl_lut.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
-        layout.addWidget(self._lbl_lut)
 
         layout.addWidget(_separator())
 
@@ -105,17 +88,12 @@ class Toolbar(QWidget):
         self._lbl_image.setText(self._truncate(name, 28))
         self._lbl_image.setToolTip(name)
 
-    def set_lut_label(self, name: str):
-        self._lbl_lut.setText(self._truncate(name, 28))
-        self._lbl_lut.setToolTip(name)
-
     def set_export_enabled(self, enabled: bool):
         self._btn_export.setEnabled(enabled)
 
     def set_processing(self, active: bool):
         self._lbl_status.setText("Applying LUT…" if active else "")
         self._btn_image.setEnabled(not active)
-        self._btn_lut.setEnabled(not active)
         if active:
             self._btn_export.setEnabled(False)
 
@@ -123,12 +101,8 @@ class Toolbar(QWidget):
         self._image_history.add(path)
         self._refresh_image_menu()
 
-    def add_recent_lut(self, path: str):
-        self._lut_history.add(path)
-        self._refresh_lut_menu()
-
     # ------------------------------------------------------------------
-    # Private: menu builders
+    # Private
     # ------------------------------------------------------------------
 
     def _refresh_image_menu(self):
@@ -149,31 +123,9 @@ class Toolbar(QWidget):
             no_recent.setEnabled(False)
         self._btn_image.setMenu(menu)
 
-    def _refresh_lut_menu(self):
-        menu = QMenu(self)
-        paths = self._lut_history.paths()
-        if paths:
-            for p in paths:
-                action = menu.addAction(self._truncate(os.path.basename(p), 50))
-                action.setToolTip(p)
-                action.triggered.connect(
-                    lambda checked, path=p: self.recent_lut_selected.emit(path)
-                )
-            menu.addSeparator()
-            clear = menu.addAction("Clear History")
-            clear.triggered.connect(self._clear_lut_history)
-        else:
-            no_recent = menu.addAction("No recent files")
-            no_recent.setEnabled(False)
-        self._btn_lut.setMenu(menu)
-
     def _clear_image_history(self):
         self._image_history.clear()
         self._refresh_image_menu()
-
-    def _clear_lut_history(self):
-        self._lut_history.clear()
-        self._refresh_lut_menu()
 
     def _on_view_changed(self, index: int):
         mode = self._combo_view.itemData(index)
