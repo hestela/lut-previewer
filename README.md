@@ -1,6 +1,6 @@
 # LUT Previewer
 
-A Linux desktop app for previewing colour LUT files (.cube) applied to photos. Load an image, add one or more LUTs, and compare results side by side using a draggable split view.
+A PyQt5 desktop app for previewing colour LUT files (.cube) applied to photos. Load an image, add one or more LUTs, and compare results side by side using a draggable split view. Works in Linux and Windows.
 
 ![Split view with before/after comparison](screenshot.png)
 
@@ -22,21 +22,32 @@ A Linux desktop app for previewing colour LUT files (.cube) applied to photos. L
 - rawpy ≥ 0.18 *(optional — required for full-resolution RAW files; JPEG/PNG work without it)*
 
 ## Setup
-
+### Linux
 ```bash
-git clone <repo>
+git clone https://github.com/hestela/lut-previewer
 cd lut-previewer
-
-python3 -m venv .venv
-.venv/bin/pip install -r requirements.txt
+python3 -m venv venv
+venv/bin/pip install -r requirements.txt
 ```
 
+### Windows
+First make sure you have Python3 installed and python3.exe can be ran from powershell.
+
+```powershell
+git clone https://github.com/hestela/lut-previewer
+cd lut-previewer
+python3.exe -m venv venv
+.\venv\Scripts\pip.exe install -r .\requirements.txt
+```
 ## Running
-
+### Linux
 ```bash
-python main.py
+venv/bin/python3 main.py
 ```
-
+### Windows
+```powershell
+.\venv\Scripts\python.exe .\main.py
+```
 ## Usage
 
 1. Click **Open Image** and select a JPEG, PNG, TIFF, or RAW file
