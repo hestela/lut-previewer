@@ -1,0 +1,4 @@
+numpy>=1.24
+Pillow>=10.0
+PyQt5>=5.15
+rawpy>=0.18  # optional: full-res RAW (NEF/CR2/ARW) support
