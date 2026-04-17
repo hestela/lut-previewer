@@ -11,7 +11,7 @@ Works in Linux and Windows.
 - **Split before/after view** — drag the divider to compare original vs. LUT-applied
 - **Multi-LUT sidebar** — load a whole folder of LUTs at once and click between them instantly
 - **Background processing** — all LUTs are applied in parallel threads; the UI stays responsive
-- **Full-resolution export** — saves at the original image resolution (not the display preview), as JPEG, PNG, or TIFF
+- **Export with LUT applied** — saves at the original image resolution, as JPEG, PNG, or TIFF with the currently selected LUT applied.
 - **Persistent history** — previously used LUTs are restored automatically on next launch
 - **RAW support** — reads NEF, CR2, ARW, DNG and other camera RAW formats via rawpy
 
