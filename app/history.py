@@ -19,7 +19,9 @@ class RecentFiles:
     def paths(self) -> list:
         """Return persisted paths, silently dropping any that no longer exist."""
         raw = self._settings.value(self._key, [])
-        # QSettings returns a plain str (not list) when only one entry was saved
+        # QSettings can return None (cleared key) or a plain str (single entry)
+        if not raw:
+            return []
         if isinstance(raw, str):
             raw = [raw]
         return [p for p in raw if os.path.isfile(p)]
@@ -29,6 +31,9 @@ class RecentFiles:
         paths = [p for p in self.paths() if p != path]
         paths.insert(0, path)
         self._settings.setValue(self._key, paths[:MAX_RECENT])
+
+    def remove(self, path: str):
+        self._settings.setValue(self._key, [p for p in self.paths() if p != path])
 
     def clear(self):
         self._settings.setValue(self._key, [])

@@ -196,6 +196,7 @@ class MainWindow(QMainWindow):
 
         self._lut_entries.pop(filepath, None)
         self._lut_results.pop(filepath, None)
+        self._lut_history.remove(filepath)
         self._lut_panel.remove_lut(filepath)
 
         if self._active_lut_path == filepath:
@@ -213,6 +214,7 @@ class MainWindow(QMainWindow):
         self._lut_entries.clear()
         self._lut_results.clear()
         self._active_lut_path = None
+        self._lut_history.clear()
         self._lut_panel.clear()
         if self._original_array is not None:
             self._viewer.set_original_only(self._original_array)

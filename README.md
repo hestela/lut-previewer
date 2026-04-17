@@ -67,4 +67,4 @@ LUTs added in previous sessions appear automatically in the sidebar on next laun
 | Input images | JPEG, PNG, TIFF, BMP, NEF, CR2, CR3, ARW, DNG, ORF, RW2 |
 |---|---|
 | LUT files | Adobe `.cube` (3D LUT, any grid size) |
-| Export | JPEG (quality 95), PNG, TIFF |
+| Export | JPEG (quality 100%), PNG, TIFF |

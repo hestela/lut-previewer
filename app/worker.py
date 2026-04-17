@@ -76,7 +76,7 @@ class ExportWorker(QThread):
             img = Image.fromarray(uint8, "RGB")
             ext = os.path.splitext(self._save_filepath)[1].lower()
             if ext in (".jpg", ".jpeg"):
-                img.save(self._save_filepath, quality=95)
+                img.save(self._save_filepath, quality=100)
             else:
                 img.save(self._save_filepath)
 
