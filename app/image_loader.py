@@ -30,15 +30,21 @@ class ImageLoadError(IOError):
     pass
 
 
-def load_image(filepath: str, max_display_px: int = 1600) -> tuple:
+def load_image(filepath: str, max_display_px: int | None = 1600) -> tuple:
     """
-    Load an image and return a display-resolution numpy array.
+    Load an image and return a numpy array.
+
+    Parameters
+    ----------
+    max_display_px : int or None
+        If set, the image is downsampled so its longest edge fits within this
+        value. Pass None to load at full resolution (e.g. for export).
 
     Returns
     -------
     (array, original_size)
         array        : (H, W, 3) float32 in [0.0, 1.0], RGB
-        original_size: (width, height) before downsampling
+        original_size: (width, height) before any downsampling
     """
     ext = os.path.splitext(filepath)[1].lower()
     try:
@@ -53,9 +59,9 @@ def load_image(filepath: str, max_display_px: int = 1600) -> tuple:
 
     original_size = pil_img.size  # (width, height)
 
-    # Downsample so the longer edge fits within max_display_px
+    # Downsample so the longer edge fits within max_display_px (skip if None)
     w, h = pil_img.size
-    if max(w, h) > max_display_px:
+    if max_display_px is not None and max(w, h) > max_display_px:
         scale = max_display_px / max(w, h)
         new_w = max(1, int(w * scale))
         new_h = max(1, int(h * scale))
