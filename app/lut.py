@@ -83,8 +83,10 @@ def parse_cube(filepath: str) -> LUT3D:
             f"Expected {expected} values for {size}^3 LUT, got {flat.size}"
         )
 
-    # C-order reshape: table[r, g, b] because blue varies fastest in .cube spec
-    table = flat.reshape((size, size, size, 3))
+    # .cube format: R varies fastest, B slowest.
+    # C-order reshape of that gives table[b_idx, g_idx, r_idx].
+    # Transpose axes so table[r_idx, g_idx, b_idx] for consistent apply_lut indexing.
+    table = flat.reshape((size, size, size, 3)).transpose(2, 1, 0, 3).copy()
 
     return LUT3D(size=size, table=table, title=title)
 

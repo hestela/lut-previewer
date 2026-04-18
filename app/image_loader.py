@@ -78,10 +78,16 @@ def _load_raw(filepath: str) -> Image.Image:
             with rawpy.imread(filepath) as raw:
                 rgb = raw.postprocess(
                     use_camera_wb=True,
-                    output_bps=8,
-                    no_auto_bright=False,
+                    output_color=rawpy.ColorSpace.sRGB,
+                    output_bps=16,
+                    no_auto_bright=True,
+                    bright=1.0,
+                    gamma=(2.222, 4.5),  # Rec.709 gamma, close to Lightroom's default
                 )
-            return Image.fromarray(rgb)
+            # Convert 16-bit to 8-bit PIL image
+            img16 = np.clip(rgb.astype(np.float32) / 65535.0, 0, 1)
+            img8 = (img16 * 255).astype(np.uint8)
+            return Image.fromarray(img8)
         except Exception as e:
             raise ImageLoadError(f"rawpy failed to decode RAW file: {e}") from e
     else:
